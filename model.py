@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import sqlite3
+import csv
 from datetime import datetime
 
 app = Flask(__name__)
@@ -24,26 +25,32 @@ class User(db.Model):
 
 class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
     thumbnail1 = db.Column(db.Text, nullable=False)
     thumbnail2 = db.Column(db.Text, nullable=False)
+    user_count = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Text, db.ForeignKey('user.id'), nullable=False)
 
-    def __int__(self, content, user_id):
+    def __init__(self, title, content, user_id):
+        self.title = title
         self.content = content
         self.user_id = user_id
-        self.thumbnail1 = getThumbnails(content)[0]
-        self.thumbnail2 = getxThumbnails(content)[1]
+        self.thumbnail1, self.thumbnail2 = getThumbnails(content)
+        self.user_count = getUserCount(content)
 
     def __repr__(self):
         return self.content
 
 
-def getThumbnails(contain):
-    matrix = []
-    csvReader = csv.reader(contain)
-    for row in csvReader:
-        matrix.append(row)
-    matrix = sorted(matrix, reverse=True)
-    talk_recent = matrix[1:3]
-    return talk_recent
+def getThumbnails(content):
+    content = content.split('\n')[1:]
+    content.reverse()
+    return content[0].split(',')[2].replace('"', ''), content[1].split(',')[2].replace('"', '')
+
+
+def getUserCount(content):
+    content = content.split('\n')[1:]
+    for i in range(len(content)):
+        content[i] = content[i].split(',')[1].replace('"', '')
+    return len(set(content))

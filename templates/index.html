@@ -86,14 +86,14 @@
         <div class="row">
             <div class="row">
                 {% if 'user_id' in session %}
-                    {% for chat in g.user.chat %}
+                    {% for chat in g.user.chats %}
                         <div class="col s12 m4">
                     <div class="card">
                         <div class="card-content chatingroom-title">
-                            <span class="card-title">2-1반 톡방</span>
+                            <span class="card-title">{{chat.title}}</span>
                             <p>
                             <div class="chip">
-                                대화상대 18명
+                                대화상대 {{chat.user_count}}명
                             </div>
 
                             </p>
@@ -101,12 +101,12 @@
                         <div class="card-content chatingroom-back">
                             <div class="row">
                                 <div class="card col chatting-box">
-                                    {{ talks[0][1][2] }}
+                                    {{ chat.thumbnail1 }}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="card col chatting-box">
-                                    {{ talks[0][0][2] }}
+                                    {{ chat.thumbnail2 }}
                                 </div>
                             </div>
                         </div>
@@ -116,6 +116,8 @@
                     </div>
                 </div>
                     {% endfor %}
+                {% else %}
+                sd
                 {% endif %}
                 <!--<div class="col s12 m4">
                     <div class="card">

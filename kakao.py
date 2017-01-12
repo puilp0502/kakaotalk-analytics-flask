@@ -32,6 +32,7 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
+
     matrix = []
     filelink = "static/talk/aaaa.csv"
     f = open(filelink, 'r', encoding='UTF-8')
