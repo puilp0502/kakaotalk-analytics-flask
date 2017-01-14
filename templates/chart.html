@@ -1,209 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-	<title>Starter Template - Materialize</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+    <title>Starter Template - Materialize</title>
 
-	<!-- CSS  -->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link href="/static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
-	<link href="/static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="/static/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/static/css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
-	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-	<!--Load the AJAX API-->
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-	<script type="text/javascript">
-		google.charts.load('current', {'packages':['corechart']});
-		google.charts.setOnLoadCallback(drawChart);
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
 
-		function drawChart() {
-			var data = google.visualization.arrayToDataTable([
-				['Year', 'Sales'],
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Sales'],
+                {% for dates in date %}
+                ['{{ dates[0] }}',      {{ dates[1] }}],
+                {% endfor %}
+                ]);
 
-				['2014',  1170],
-				['2015',  660],
-				['2014',  1170],
-				['2015',  660],
-				['2016',  1030],
-				['2013',  1000],
-				['2014',  1170],
-				['2015',  660],
-				['2016',  1030]
-				]);
+            var options = {
+                title: '날짜별 대회량',
+                hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+                vAxis: {minValue: 0}
+            };
 
-			var options = {
-				title: '날짜별 대회량',
-				hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-				vAxis: {minValue: 0}
-			};
+            var chart = new google.visualization.AreaChart(document.getElementById('datechart'));
+            chart.draw(data, options);
+        }
+    </script>
+    <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Task', 'Hours per Day'],
+                {% for names in name %}
+                ['{{ names[0] }}',      {{ names[1] }}],
+                {% endfor %}
+                
+                ]);
 
-			var chart = new google.visualization.AreaChart(document.getElementById('datechart'));
-			chart.draw(data, options);
-		}
-	</script>
-	<script type="text/javascript">
-		google.charts.load("current", {packages:["corechart"]});
-		google.charts.setOnLoadCallback(drawChart);
-		function drawChart() {
-			var data = google.visualization.arrayToDataTable([
-				['Task', 'Hours per Day'],
-				{% for i in name %}
-				{% endfor %}
-				['Eat',      2],
-				['Commute',  2],
-				['Watch TV', 2],
-				['Sleep',    7]
-				]);
+            var options = {
+                title: '대화량 점유율',
+                pieHole: 0.4,
+            };
 
-			var options = {
-				title: '대화량 점유율',
-				pieHole: 0.4,
-			};
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chart.draw(data, options);
+        }
 
-			var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-			chart.draw(data, options);
-		}
+    </script>
+    <script type="text/javascript">
+        google.charts.load('current', {packages: ['corechart', 'bar']});
+        google.charts.setOnLoadCallback(drawBasic);
 
-	</script>
-	<script type="text/javascript">
-		google.charts.load('current', {packages: ['corechart', 'bar']});
-		google.charts.setOnLoadCallback(drawBasic);
+        function drawBasic() {
 
-		function drawBasic() {
+            var data = google.visualization.arrayToDataTable([
+                 ['word', 'Population',],
+                {% for words in word %}
+                ['{{ words[0] }}',      {{ words[1] }}],
+                {% endfor %}
+                ]);
 
-			var data = new google.visualization.DataTable();
-			data.addColumn('timeofday', 'Time of Day');
-			data.addColumn('number', 'Motivation Level');
+            var options = {
+                title: '가장 많이 사용된 단어',
+                chartArea: {width: '50%'},
+                hAxis: {
+                    title: 'Total Population',
+                    minValue: 0
+                },
+            };
 
-			data.addRows([
-				[{v: [8, 0, 0], f: '8 am'}, 4],
-				[{v: [9, 0, 0], f: '9 am'}, 2],
-				[{v: [10, 0, 0], f:'10 am'}, 3],
-				[{v: [11, 0, 0], f: '11 am'}, 5],
-				[{v: [12, 0, 0], f: '12 pm'}, 5],
-				[{v: [13, 0, 0], f: '1 pm'}, 2],
-				[{v: [14, 0, 0], f: '2 pm'}, 7],
-				[{v: [15, 0, 0], f: '3 pm'}, 3],
-				[{v: [16, 0, 0], f: '4 pm'}, 2],
-				[{v: [17, 0, 0], f: '5 pm'}, 4],
-				]);
+            var chart = new google.visualization.BarChart(document.getElementById('timechart'));
 
-			var options = {
-				title: '시간대별 활성도',
-				hAxis: {
-					title: 'Time of Day',
-					format: 'h:mm a',
-					viewWindow: {
-						min: [7, 30, 0],
-						max: [17, 30, 0]
-					}
-				},
-				vAxis: {
-					title: 'Rating (scale of 1-10)'
-				}
-			};
-
-			var chart = new google.visualization.ColumnChart(
-				document.getElementById('timechart'));
-
-			chart.draw(data, options);
-		}
-	</script>
+            chart.draw(data, options);
+        }
+    </script>
 </head>
 <body>
-	<nav class="brown lighten-1" role="navigation">
-		<div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">K-Analytics</a>
-			<ul class="right hide-on-med-and-down">
-				<li><a href="#"><b>김주용</b>회원님</a></li>
-			</ul>
+    <nav class="brown lighten-1" role="navigation">
+        <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">K-Analytics</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#"><b>김주용</b>회원님</a></li>
+            </ul>
 
-			<ul id="nav-mobile" class="side-nav">
-				<li><a href="#">Navbar Link</a></li>
-			</ul>
-			<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-		</div>
-	</nav>
+            <ul id="nav-mobile" class="side-nav">
+                <li><a href="#">Navbar Link</a></li>
+            </ul>
+            <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
 
-	<!-- Modal Structure -->
-
-
-	<div class="container">
-		<div class="section">
-			<div class="card">
-				<div class="card-content chatingroom-title">
-					<span class="card-title">2-1반 톡방</span>
-					<p>
-						<div class="chip">
-							대화상대 18명
-						</div>
-
-					</p>
-				</div>
-				<div class="card-content chatingroom-back">
-					<div class="row"> 
-
-						<div id="datechart" class="col s12 m12" style="height:400px;"></div>
-					</div>
-
-					<div class="row">
-
-						<div id="donutchart" class="col s12 m6" style="height: 400px;"></div>
-						<div id="timechart" class="col s12 m6" style="height:400px"></div>
-					</div>
-				</div>
-				<div class="card-action white ">
-                <a class="waves-effect waves-light btn chat-button black-text">대화 내역 보기</a>
-              </div>
-			</div>
-		</div>
-	</div>
-
-	<footer class="page-footer orange">
-		<div class="container">
-			<div class="row">
-				<div class="col l6 s12">
-					<h5 class="white-text">Company Bio</h5>
-					<p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
+    <!-- Modal Structure -->
 
 
-				</div>
-				<div class="col l3 s12">
-					<h5 class="white-text">Settings</h5>
-					<ul>
-						<li><a class="white-text" href="#!">Link 1</a></li>
-						<li><a class="white-text" href="#!">Link 2</a></li>
-						<li><a class="white-text" href="#!">Link 3</a></li>
-						<li><a class="white-text" href="#!">Link 4</a></li>
-					</ul>
-				</div>
-				<div class="col l3 s12">
-					<h5 class="white-text">Connect</h5>
-					<ul>
-						<li><a class="white-text" href="#!">Link 1</a></li>
-						<li><a class="white-text" href="#!">Link 2</a></li>
-						<li><a class="white-text" href="#!">Link 3</a></li>
-						<li><a class="white-text" href="#!">Link 4</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class="footer-copyright">
-			<div class="container">
-				Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
-			</div>
-		</div>
-	</footer>
+    <div class="container">
+        <div class="section">
+            <div class="card">
+                <div class="card-content chatingroom-title">
+                    <span class="card-title">{{ title }}</span>
+                    <p>
+                        <div class="chip">
+                            대화상대 {{user_count}}명
+                        </div>
+
+                    </p>
+                </div>
+                <div class="card-content chatingroom-back">
+                    <div class="row"> 
+
+                        <div id="datechart" class="col s12 m12" style="height:400px;"></div>
+                    </div>
+
+                    <div class="row">
+
+                        <div id="donutchart" class="col s12 m6" style="height: 400px;"></div>
+                        <div id="timechart" class="col s12 m6" style="height:400px"></div>
+                    </div>
+                </div>
+                <div class="card-action white ">
+                    <a href="/" class="waves-effect waves-light btn chat-button black-text">톡방 내역 보기</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="page-footer orange">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Company Bio</h5>
+                    <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
 
 
-	<!--  Scripts-->
-	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Settings</h5>
+                    <ul>
+                        <li><a class="white-text" href="#!">Link 1</a></li>
+                        <li><a class="white-text" href="#!">Link 2</a></li>
+                        <li><a class="white-text" href="#!">Link 3</a></li>
+                        <li><a class="white-text" href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Connect</h5>
+                    <ul>
+                        <li><a class="white-text" href="#!">Link 1</a></li>
+                        <li><a class="white-text" href="#!">Link 2</a></li>
+                        <li><a class="white-text" href="#!">Link 3</a></li>
+                        <li><a class="white-text" href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+            </div>
+        </div>
+    </footer>
 
-	<script src="/static/js/materialize.js"></script>
-	<script src="/static/js/init.js"></script>
-	<script>
-		$(document).ready(function(){
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+    <script src="/static/js/materialize.js"></script>
+    <script src="/static/js/init.js"></script>
+    <script>
+        $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
 });
