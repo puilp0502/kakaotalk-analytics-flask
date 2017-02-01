@@ -8,10 +8,10 @@ import requests
 import csv
 import operator
 import os
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = 'static/talk'
-ALLOWED_EXTENSIONS = set(['txt', 'csv', 'jpg'])
+ALLOWED_EXTENSIONS = {'txt', 'csv', 'jpg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -87,14 +87,14 @@ def charts():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            file_url='static/talk/'+filename
-            with open (file_url, "r") as myfile:
-                #print('ssssss',myfile.read().split('\n')[0:3],'eeee')
+            file_url = 'static/talk/' + filename
+            with open(file_url, "r") as myfile:
+                # print('ssssss',myfile.read().split('\n')[0:3],'eeee')
 
-                talk_con=myfile.read();
+                talk_con = myfile.read()
 
-            print (type(talk_con))
-            chat= Chat(request.form['title'],talk_con,session['user_id'],file_url)
+            print(type(talk_con))
+            chat = Chat(request.form['title'], talk_con, session['user_id'], file_url)
             db.session.add(chat)
             db.session.commit()
     matrix = []
@@ -102,7 +102,7 @@ def charts():
     word_count = {}
     date_count = {}
 
-    f = open( file_url , 'r')
+    f = open(file_url, 'r')
     csvReader = csv.reader(f)
     for row in csvReader:
         matrix.append(row)
@@ -132,18 +132,20 @@ def charts():
     sorted_word = sorted(word_count.items(), key=operator.itemgetter(1), reverse=True)
     sorted_date = sorted(date_count.items(), key=operator.itemgetter(1), reverse=True)
 
-   # print(matrix[1:3])
-   # print(sorted_name)
-   # print(sorted_word[0:20])
-   # print(sorted_date[0:20])
+    # print(matrix[1:3])
+    # print(sorted_name)
+    # print(sorted_word[0:20])
+    # print(sorted_date[0:20])
     f.close()
 
-    user_counts=len(sorted_name)-1
+    user_counts = len(sorted_name) - 1
 
     cha = Chat.query.filter_by(title=request.form['title']).first()
-    cha.user_count=user_counts
+    cha.user_count = user_counts
     db.session.commit()
-    return render_template('chart.html', name=sorted_name, word=sorted_word[40:50], date=sorted_date ,title = request.form['title'], user_count=user_counts)
+    return render_template('chart.html', name=sorted_name, word=sorted_word[40:50], date=sorted_date,
+                           title=request.form['title'], user_count=user_counts)
+
 
 @app.route('/chart/<string:chat_id>', methods=['GET', 'POST'])
 def test(chat_id):
@@ -158,9 +160,9 @@ def test(chat_id):
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            file_url='static/talk/'+filename
-            with open (file_url, "r") as myfile:
-                talk_con='''Date,User,Message
+            file_url = 'static/talk/' + filename
+            with open(file_url, "r") as myfile:
+                talk_con = '''Date,User,Message
 2016-08-07 00:12:07,"임준오","h"
 2016-08-07 00:28:16,"OI우형","hi"
 2016-08-07 00:30:20,"홍인표","김연경이 누구임"
@@ -178,8 +180,8 @@ def test(chat_id):
 2016-08-07 00:37:17,"정재원","?"
 2016-08-07 00:37:27,"정재원","ㅁㅊ신아람 32강 탈락했었냐"'''
 
-            print (type(talk_con))
-            chat= Chat(request.form['title'],talk_con,session['user_id'],file_url)
+            print(type(talk_con))
+            chat = Chat(request.form['title'], talk_con, session['user_id'], file_url)
             db.session.add(chat)
             db.session.commit()
     matrix = []
@@ -187,43 +189,43 @@ def test(chat_id):
     word_count = {}
     date_count = {}
 
-    f = open(cha.filename, 'r')
+    f = open(cha.filename, 'r', encoding='utf8')
     csvReader = csv.reader(f)
     for row in csvReader:
         matrix.append(row)
     count = len(matrix)
     for name in matrix:
         if name[1] in name_count:
-            name_count[name[1]]+=1
+            name_count[name[1]] += 1
         else:
-            name_count[name[1]]=1
-            user_count=1
+            name_count[name[1]] = 1
+            user_count = 1
     for words in matrix:
         for word in words[2].split():
             if word in word_count:
-                word_count[word]+=1
+                word_count[word] += 1
             else:
-                word_count[word]=1
+                word_count[word] = 1
     for date in matrix:
-        time=date[0].split()
-        day=time[0]
+        time = date[0].split()
+        day = time[0]
         if day in date_count:
-            date_count[day]+=1
+            date_count[day] += 1
         else:
-            date_count[day]=1
+            date_count[day] = 1
 
-    matrix= sorted(matrix,reverse=True)
-    sorted_name= sorted(name_count.items(), key=operator.itemgetter(1), reverse=True)
-    sorted_word = sorted(word_count.items(), key=operator.itemgetter(1), reverse=True) 
+    matrix = sorted(matrix, reverse=True)
+    sorted_name = sorted(name_count.items(), key=operator.itemgetter(1), reverse=True)
+    sorted_word = sorted(word_count.items(), key=operator.itemgetter(1), reverse=True)
     sorted_date = sorted(date_count.items(), key=operator.itemgetter(0), reverse=True)
-    print (matrix[1:3])
-    print (sorted_name)
-    print (sorted_word[0:20])
+    print(matrix[1:3])
+    print(sorted_name)
+    print(sorted_word[0:20])
     sorted_word = sorted_word[0:20]
-    user_counts=len(sorted_name)-1
+    user_counts = len(sorted_name) - 1
     f.close()
-    return render_template('chart.html', name=sorted_name, word=sorted_word, date=sorted_date, title=chat_id,user_count=user_counts)
-
+    return render_template('chart.html', name=sorted_name, word=sorted_word, date=sorted_date, title=chat_id,
+                           user_count=user_counts)
 
 
 @app.route('/users/<string:username>')

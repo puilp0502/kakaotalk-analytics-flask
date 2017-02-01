@@ -20,7 +20,7 @@
 
         function drawChart() {
             var data = google.visualization.arrayToDataTable([
-                ['Year', 'Sales'],
+                ['Year', 'Count'],
                 {% for dates in date %}
                 ['{{ dates[0] }}',      {{ dates[1] }}],
                 {% endfor %}
